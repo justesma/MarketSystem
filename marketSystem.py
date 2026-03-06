@@ -59,17 +59,47 @@ if giris=="1":
             break
         else:
             print("Geçersiz Seçim!")
-elif giris =="2":
-    print("Müşteri olarak giriş yaptınız.")
-    toplam_tutar=0
-    sepet={}
+elif giris == "2":
+    print("\nMüşteri olarak giriş yaptınız.")
+    sepet = {}
+    
     while True:
-        print("\n1. Ürünleri görüntüle")
-        print("2. Ürün satın al")
-        print("3. Sepeti görüntüle")
-        print("4. Ödeme yap ve çıkış yap")
+        print("\n1. Ürünleri görüntüle\n2. Ürün satın al\n3. Sepeti görüntüle\n4. Ödeme yap ve çıkış yap")
+        secim = input("Seçiminizi yapın: ")
 
-        secim=input("Seçiminizi yapın: ")
+        if secim == "1":
+            print("\n--- Güncel Ürünler ---")
+            for urun, detay in market.items():
+                print(f"{urun.capitalize()}: {detay['fiyat']} TL (Stok: {detay['stok']})")
+
+        elif secim == "2":
+            alincak = input("Almak istediğiniz ürünün adı: ").lower()
+            if alincak in market:
+                adet = int(input(f"Kaç adet {alincak} almak istiyorsunuz? "))
+                
+                # Stok kontrolü
+                if adet <= market[alincak]["stok"]:
+                    # Stoktan düş ve sepete ekle
+                    market[alincak]["stok"] -= adet
+                    sepet[alincak] = sepet.get(alincak, 0) + adet
+                    print(f"{adet} adet {alincak} sepete eklendi.")
+                else:
+                    print(f"Yetersiz stok! Mevcut stok: {market[alincak]['stok']}")
+            else:
+                print("Ürün markette bulunamadı.")
+
+        elif secim == "3":
+            print("\n--- Sepetiniz ---")
+            toplam = 0
+            for urun, adet in sepet.items():
+                ara_toplam = adet * market[urun]["fiyat"]
+                toplam += ara_toplam
+                print(f"{urun.capitalize()}: {adet} adet x {market[urun]['fiyat']} TL = {ara_toplam} TL")
+            print(f"Toplam Tutar: {toplam} TL")
+
+        elif secim == "4":
+            print(f"Ödemeniz alındı. Bizi tercih ettiğiniz için teşekkürler!")
+            break
 
 
 
